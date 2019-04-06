@@ -7,8 +7,8 @@ TestOnlineSystem-Backend
   在线教育课程考评系统后台
 
   [![NPM version](https://img.shields.io/npm/v/ng-alain.svg?style=flat-square)](https://www.npmjs.com/package/ng-alain)
-  [![Express version](https://img.shields.io/badge/express-v4.16.4-green.svg)](https://www.npmjs.com/package/express)
-  [![Node version](https://img.shields.io/badge/Node-v11.13.0-green.svg)](https://www.npmjs.com/package/node)
+  [![Express version](https://img.shields.io/badge/express-v4.16.4-blue.svg)](https://www.npmjs.com/package/express)
+  [![Node version](https://img.shields.io/badge/Node-v11.13.0-blue.svg)](https://www.npmjs.com/package/node)
 
 </div>
 
