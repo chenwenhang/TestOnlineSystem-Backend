@@ -1,6 +1,13 @@
 var express = require('express');
 var app = new express();
 
+//应用级中间件，用于权限判断等，可写在匹配前或后
+app.use('/product',function(req,res,next){
+    console.log('product中间件通过app.use');
+    //继续向下匹配，没有则卡在这
+    next();
+})
+
 app.get('/', (req, res) => {
     res.send('express');
 });
