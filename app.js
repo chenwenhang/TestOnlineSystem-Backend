@@ -4,6 +4,7 @@ var bodyParser = require('body-parser')
 var MongoClient = require('mongodb').MongoClient
 const MongoStore = require('connect-mongo')(session);
 const assert = require('assert');
+var md5 = require('md5');
 var app = new express();
 
 const dbUrl = 'mongodb://localhost:27017';
@@ -144,7 +145,8 @@ app.get('/doLogin', (req, res) => {
             assert.equal(err, null);
             if (data.length > 0) {
                 session.userinfo = data[0];
-                // console.log(data[0])
+                // console.log(md5(data[0].password));
+                // console.log(session)
                 // console.log("login succeed---")
                 var result = status(1, '登录成功', data[0]);
                 res.json(result);
