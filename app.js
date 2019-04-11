@@ -12,10 +12,11 @@ const dbName = 'exam';
 
 
 // 封装状态方法
-var status = (code, msg) => {
+var status = (code, msg, data = {}) => {
     return {
         "code": code,
-        "msg": msg
+        "msg": msg,
+        "data": data
     }
 }
 
@@ -42,7 +43,7 @@ app.use(session({
     })
 }))
 //设置跨域请求头
-app.all('*', function (req, res, next) {
+app.all('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     //Access-Control-Allow-Headers ,可根据浏览器的F12查看,把对应的粘贴在这里就行
     res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -145,7 +146,7 @@ app.get('/doLogin', (req, res) => {
                 session.userinfo = data[0];
                 // console.log(data[0])
                 // console.log("login succeed---")
-                var result = Object.assign({}, status(1, '登录成功'), data[0]);
+                var result = status(1, '登录成功', data[0]);
                 res.json(result);
             } else {
                 // console.log("login fail------")
@@ -192,7 +193,7 @@ app.get('/manage/question', (req, res) => {
 
 
 //404
-app.use(function (req, res) {
+app.use((req, res) => {
     res.status(404).send('404ERROR');
 })
 
