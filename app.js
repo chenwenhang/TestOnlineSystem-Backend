@@ -59,7 +59,7 @@ app.use((req, res, next) => {
     } else if (session.userinfo && session.userinfo.username != '') {
         next();
     } else {
-        res.json(status(1, '未登录'))
+        res.json(status(1, '未登录'));
     }
 });
 
