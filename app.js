@@ -1,8 +1,16 @@
+/*
+ * @Author: Chen Wenhang
+ * @Description: 
+ * @Github: https://github.com/chenwenhang
+ * @Date: 2019-04-12 15:06:28
+ * @LastEditTime: 2019-04-12 15:59:24
+ */
+
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser')
 const MongoStore = require('connect-mongo')(session);
-var DB=require('./modules/db.js');
+var DB = require('./modules/db.js');
 var md5 = require('md5');
 
 
@@ -127,15 +135,18 @@ app.get('/product', (req, res) => {
 
 
 
+/**
+ * 
+ * GET（SELECT）：从服务器取出资源（一项或多项）。
+ * POST（CREATE）：在服务器新建一个资源。
+ * PUT（UPDATE）：在服务器更新资源（客户端提供完整资源数据）。
+ * PATCH（UPDATE）：在服务器更新资源（客户端提供需要修改的资源数据）。
+ * DELETE（DELETE）：从服务器删除资源。
+ */
 
 
-
-
-app.get('/doLogin', (req, res) => {
-    DB.find('user',{
-        // username:username,
-        // password:password
-    },function(err,data){
+app.post('/doLogin', (req, res) => {
+    DB.find('user', req.body, function (err, data) {
         if (data.length > 0) {
             session.userinfo = data[0];
             // console.log(md5(data[0].password));
