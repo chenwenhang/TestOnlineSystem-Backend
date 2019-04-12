@@ -1,14 +1,12 @@
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser')
-var MongoClient = require('mongodb').MongoClient
 const MongoStore = require('connect-mongo')(session);
-const assert = require('assert');
+var DB=require('./modules/db.js');
 var md5 = require('md5');
-var app = new express();
 
-const dbUrl = 'mongodb://localhost:27017';
-const dbName = 'exam';
+
+var app = new express();
 
 
 
@@ -134,28 +132,21 @@ app.get('/product', (req, res) => {
 
 
 app.get('/doLogin', (req, res) => {
-    // console.log(req.body);
-    MongoClient.connect(dbUrl, (err, client) => {
-        assert.equal(null, err);
-        // console.log("Connected successfully to server");
-        const db = client.db(dbName);
-        const collection = db.collection('user');
-
-        collection.find({}).toArray((err, data) => {
-            assert.equal(err, null);
-            if (data.length > 0) {
-                session.userinfo = data[0];
-                // console.log(md5(data[0].password));
-                // console.log(session)
-                // console.log("login succeed---")
-                var result = status(1, '登录成功', data[0]);
-                res.json(result);
-            } else {
-                // console.log("login fail------")
-                res.json(status(0, '登录失败'));
-            }
-            client.close();
-        });
+    DB.find('user',{
+        // username:username,
+        // password:password
+    },function(err,data){
+        if (data.length > 0) {
+            session.userinfo = data[0];
+            // console.log(md5(data[0].password));
+            // console.log(session)
+            // console.log("login succeed---")
+            var result = status(1, '登录成功', data[0]);
+            res.json(result);
+        } else {
+            // console.log("login fail------")
+            res.json(status(0, '登录失败'));
+        }
     })
 });
 
