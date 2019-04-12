@@ -3,26 +3,22 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-12 20:15:06
+ * @LastEditTime: 2019-04-12 21:36:12
+ */
+ /**
+ * 
+ * GET（SELECT）：get resource from server
+ * POST（CREATE）：create resources on server
+ * PUT（UPDATE）：update resources on server
+ * DELETE（DELETE）：delete resources on server。
  */
 var express = require('express');
 var session = require('express-session');
-var bodyParser = require('body-parser')
 const MongoStore = require('connect-mongo')(session);
-
-var DB = require('./modules/db.js');
-var md5 = require('md5');
+var status = require('./routes/tools/status.js');
+var bodyParser = require('body-parser');
 
 var app = new express();
-
-// combine json methods
-var status = (code, msg, data = {}) => {
-    return {
-        "code": code,
-        "msg": msg,
-        "data": data
-    }
-}
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({
@@ -53,16 +49,38 @@ app.all('*', (req, res, next) => {
     res.header('Content-Type', 'application/json;charset=utf-8');
     next();
 });
-// judge power
-// app.use((req, res, next) => {
-//     if (req.url == '/doLogin' || req.url == '/doRegister') {
-//         next();
-//     } else if (session.userinfo && session.userinfo.username != '') {
-//         next();
-//     } else {
-//         res.json(status(1, '未登录'));
-//     }
-// });
+
+/**
+ * @description: judge power
+ * @param {type} 
+ * @return: 
+ */
+var index = require('./routes/index.js');
+var manage = require('./routes/manage.js');
+
+app.use((req, res, next) => {
+    if (req.url == '/login' || req.url == '/login/doRegister') {
+        next();
+    } else if (req.session.userinfo && req.session.userinfo.username != '') {
+        next();
+    } else {
+        res.json(status(1, '未登录'));
+    }
+});
+
+app.use('/', index);
+app.use('/manage', manage);
+
+//404
+app.use((req, res) => {
+    res.status(404).send('404ERROR');
+})
+
+
+
+
+app.listen(3000, '127.0.0.1');
+
 
 
 
@@ -123,189 +141,3 @@ app.get('/product', (req, res) => {
 });
 
 */
-
-
-
-
-
-
-
-/**
- * 
- * GET（SELECT）：get resource from server
- * POST（CREATE）：create resources on server
- * PUT（UPDATE）：update resources on server
- * DELETE（DELETE）：delete resources on server。
- */
-
-app.get('/doLogin', (req, res) => {
-    DB.find('user', {}, (err, data) => {
-        if (data.length > 0) {
-            req.session.userinfo = data[0];
-            // console.log(md5(data[0].password));
-            // console.log(session)
-            // console.log("login succeed---")
-            res.json(status(1, '登录成功', data[0]));
-        } else {
-            // console.log("login fail------")
-            res.json(status(0, '登录失败'));
-        }
-    })
-});
-
-/**
- * @description: login
- * @param {type} 
- * @return: 
- */
-// app.post('/doLogin', (req, res) => {
-//     DB.find('user', req.body, function (err, data) {
-//         if (data.length > 0) {
-//             req.session.userinfo = data[0];
-//             // console.log(md5(data[0].password));
-//             // console.log(session)
-//             // console.log("login succeed---")
-//             res.json(status(1, '登录成功', data[0]));
-//         } else {
-//             // console.log("login fail------")
-//             res.json(status(0, '登录失败'));
-//         }
-//     })
-// });
-
-/**
- * @description: register
- * @param {type} 
- * @return: 
- */
-app.post('/doRegister', (req, res) => {
-    DB.insert('user', [req.body], (err, data) => {
-        if (err) {
-            res.json(status(0, '注册失败'));
-        } else {
-            res.json(status(1, '注册成功'));
-        }
-    })
-});
-
-/**
- * @description: logout
- * @param {type} 
- * @return: 
- */
-app.post('/doLogout', (req, res) => {
-    req.session.destroy(function (err) {
-        if (err) {
-            res.json(status(0, '退出失败'));
-        } else {
-            res.json(status(1, '退出成功'));
-        }
-    })
-});
-
-
-/**
- * @description: get all users
- * @param {} 
- * @return: 
- */
-app.get('/manage/user', (req, res) => {
-
-    DB.find('user', {}, (err, data) => {
-        // console.log(data);
-        if (err) {
-            res.json(status(0, '查询失败'));
-        } else {
-            res.json(status(1, '查询成功', data));
-        }
-    })
-});
-
-/**
- * @description: get all tags
- * @param {} 
- * @return: 
- */
-app.get('/manage/tag', (req, res) => {
-
-    DB.find('tag', {}, (err, data) => {
-        // console.log(data);
-        if (err) {
-            res.json(status(0, '查询失败'));
-        } else {
-            res.json(status(1, '查询成功', data));
-        }
-    })
-});
-
-/**
- * @description: get all occupations
- * @param {} 
- * @return: 
- */
-app.get('/manage/occupation', (req, res) => {
-    DB.find('occupation', {}, (err, data) => {
-        // console.log(data);
-        if (err) {
-            res.json(status(0, '查询失败'));
-        } else {
-            res.json(status(1, '查询成功', data));
-        }
-    })
-});
-
-/**
- * @description: get all papers
- * @param {} 
- * @return: 
- */
-app.get('/manage/paper', (req, res) => {
-    DB.find('paper', {}, (err, data) => {
-        // console.log(data);
-        if (err) {
-            res.json(status(0, '查询失败'));
-        } else {
-            res.json(status(1, '查询成功', data));
-        }
-    })
-});
-
-/**
- * @description: get paper_detail by id
- * @param {id} 
- * @return: 
- */
-app.get('/manage/paper_detail', (req, res) => {
-    DB.aggregate('paper', new DB.ObjectID(req.query.id), 'question', 'question_id', 'question', (err, data) => {
-        // console.log(data);
-        if (err) {
-            res.json(status(0, '查询失败'));
-        } else {
-            res.json(status(1, '查询成功', data));
-        }
-    })
-});
-
-/**
- * @description: get all questions
- * @param {} 
- * @return: 
- */
-app.get('/manage/question', (req, res) => {
-    DB.find('question', {}, (err, data) => {
-        // console.log(data);
-        if (err) {
-            res.json(status(0, '查询失败'));
-        } else {
-            res.json(status(1, '查询成功', data));
-        }
-    })
-});
-
-
-//404
-app.use((req, res) => {
-    res.status(404).send('404ERROR');
-})
-
-app.listen(3000, '127.0.0.1');
