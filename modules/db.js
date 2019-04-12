@@ -3,10 +3,11 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-12 15:59:33
+ * @LastEditTime: 2019-04-12 20:15:07
  */
 
 var MongoClient = require('mongodb').MongoClient
+var ObjectID = require('mongodb').ObjectID;
 const dbUrl = 'mongodb://localhost:27017';
 const dbName = 'exam';
 const assert = require('assert');
@@ -19,11 +20,46 @@ var __connectDB = (callback) => {
     })
 }
 
+exports.ObjectID = ObjectID;
+
 exports.find = (collectionName, json, callback) => {
     __connectDB((client) => {
         const db = client.db(dbName);
         const collection = db.collection(collectionName);
         collection.find(json).toArray((err, data) => {
+            // assert.equal(err, null);
+            client.close();
+            callback(err, data);
+        });
+    })
+}
+/**
+ * @description: join query
+ * @param {collectionName1, _id, collectionName2, localField, anotherName, callback} 
+ * @return: 
+ */
+exports.aggregate = (collectionName1, _id, collectionName2, localField, anotherName, callback) => {
+    __connectDB((client) => {
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName1);
+        collection.aggregate([{
+            $unwind: "$" + localField
+        }, {
+            $lookup: {
+                from: collectionName2, // 右集合
+                localField: localField, // 左集合 join 字段
+                foreignField: '_id', // 右集合 join 字段
+                as: anotherName // 新生成字段（类型array）
+            }
+        }, {
+            $match: {
+                anotherName: {
+                    $ne: []
+                },
+                // conditionJson
+                _id:_id
+            }
+        }]).toArray((err, data) => {
             // assert.equal(err, null);
             client.close();
             callback(err, data);

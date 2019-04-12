@@ -3,22 +3,19 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-12 15:59:24
+ * @LastEditTime: 2019-04-12 20:15:06
  */
-
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser')
 const MongoStore = require('connect-mongo')(session);
+
 var DB = require('./modules/db.js');
 var md5 = require('md5');
 
-
 var app = new express();
 
-
-
-// 封装状态方法
+// combine json methods
 var status = (code, msg, data = {}) => {
     return {
         "code": code,
@@ -26,7 +23,6 @@ var status = (code, msg, data = {}) => {
         "data": data
     }
 }
-
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({
@@ -49,25 +45,24 @@ app.use(session({
         touchAfter: 24 * 3600
     })
 }))
-//设置跨域请求头
+//set cross domain header
 app.all('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    //Access-Control-Allow-Headers ,可根据浏览器的F12查看,把对应的粘贴在这里就行
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     res.header('Access-Control-Allow-Methods', '*');
     res.header('Content-Type', 'application/json;charset=utf-8');
     next();
 });
 // judge power
-app.use((req, res, next) => {
-    if (req.url == '/doLogin' || req.url == '/doRegister') {
-        next();
-    } else if (session.userinfo && session.userinfo.username != '') {
-        next();
-    } else {
-        res.json(status(1, '未登录'));
-    }
-});
+// app.use((req, res, next) => {
+//     if (req.url == '/doLogin' || req.url == '/doRegister') {
+//         next();
+//     } else if (session.userinfo && session.userinfo.username != '') {
+//         next();
+//     } else {
+//         res.json(status(1, '未登录'));
+//     }
+// });
 
 
 
@@ -137,23 +132,20 @@ app.get('/product', (req, res) => {
 
 /**
  * 
- * GET（SELECT）：从服务器取出资源（一项或多项）。
- * POST（CREATE）：在服务器新建一个资源。
- * PUT（UPDATE）：在服务器更新资源（客户端提供完整资源数据）。
- * PATCH（UPDATE）：在服务器更新资源（客户端提供需要修改的资源数据）。
- * DELETE（DELETE）：从服务器删除资源。
+ * GET（SELECT）：get resource from server
+ * POST（CREATE）：create resources on server
+ * PUT（UPDATE）：update resources on server
+ * DELETE（DELETE）：delete resources on server。
  */
 
-
-app.post('/doLogin', (req, res) => {
-    DB.find('user', req.body, function (err, data) {
+app.get('/doLogin', (req, res) => {
+    DB.find('user', {}, (err, data) => {
         if (data.length > 0) {
-            session.userinfo = data[0];
+            req.session.userinfo = data[0];
             // console.log(md5(data[0].password));
             // console.log(session)
             // console.log("login succeed---")
-            var result = status(1, '登录成功', data[0]);
-            res.json(result);
+            res.json(status(1, '登录成功', data[0]));
         } else {
             // console.log("login fail------")
             res.json(status(0, '登录失败'));
@@ -161,38 +153,153 @@ app.post('/doLogin', (req, res) => {
     })
 });
 
+/**
+ * @description: login
+ * @param {type} 
+ * @return: 
+ */
+// app.post('/doLogin', (req, res) => {
+//     DB.find('user', req.body, function (err, data) {
+//         if (data.length > 0) {
+//             req.session.userinfo = data[0];
+//             // console.log(md5(data[0].password));
+//             // console.log(session)
+//             // console.log("login succeed---")
+//             res.json(status(1, '登录成功', data[0]));
+//         } else {
+//             // console.log("login fail------")
+//             res.json(status(0, '登录失败'));
+//         }
+//     })
+// });
+
+/**
+ * @description: register
+ * @param {type} 
+ * @return: 
+ */
 app.post('/doRegister', (req, res) => {
-    res.send("注册");
+    DB.insert('user', [req.body], (err, data) => {
+        if (err) {
+            res.json(status(0, '注册失败'));
+        } else {
+            res.json(status(1, '注册成功'));
+        }
+    })
 });
 
+/**
+ * @description: logout
+ * @param {type} 
+ * @return: 
+ */
 app.post('/doLogout', (req, res) => {
-    res.send("退出");
+    req.session.destroy(function (err) {
+        if (err) {
+            res.json(status(0, '退出失败'));
+        } else {
+            res.json(status(1, '退出成功'));
+        }
+    })
 });
 
 
-
+/**
+ * @description: get all users
+ * @param {} 
+ * @return: 
+ */
 app.get('/manage/user', (req, res) => {
-    res.send("获取用户列表");
+
+    DB.find('user', {}, (err, data) => {
+        // console.log(data);
+        if (err) {
+            res.json(status(0, '查询失败'));
+        } else {
+            res.json(status(1, '查询成功', data));
+        }
+    })
 });
 
-
+/**
+ * @description: get all tags
+ * @param {} 
+ * @return: 
+ */
 app.get('/manage/tag', (req, res) => {
-    res.send("获取标签列表");
+
+    DB.find('tag', {}, (err, data) => {
+        // console.log(data);
+        if (err) {
+            res.json(status(0, '查询失败'));
+        } else {
+            res.json(status(1, '查询成功', data));
+        }
+    })
 });
 
-
-app.get('/manage/eccupation', (req, res) => {
-    res.send("获取职业列表");
+/**
+ * @description: get all occupations
+ * @param {} 
+ * @return: 
+ */
+app.get('/manage/occupation', (req, res) => {
+    DB.find('occupation', {}, (err, data) => {
+        // console.log(data);
+        if (err) {
+            res.json(status(0, '查询失败'));
+        } else {
+            res.json(status(1, '查询成功', data));
+        }
+    })
 });
 
-
+/**
+ * @description: get all papers
+ * @param {} 
+ * @return: 
+ */
 app.get('/manage/paper', (req, res) => {
-    res.send("获取试卷列表");
+    DB.find('paper', {}, (err, data) => {
+        // console.log(data);
+        if (err) {
+            res.json(status(0, '查询失败'));
+        } else {
+            res.json(status(1, '查询成功', data));
+        }
+    })
 });
 
+/**
+ * @description: get paper_detail by id
+ * @param {id} 
+ * @return: 
+ */
+app.get('/manage/paper_detail', (req, res) => {
+    DB.aggregate('paper', new DB.ObjectID(req.query.id), 'question', 'question_id', 'question', (err, data) => {
+        // console.log(data);
+        if (err) {
+            res.json(status(0, '查询失败'));
+        } else {
+            res.json(status(1, '查询成功', data));
+        }
+    })
+});
 
+/**
+ * @description: get all questions
+ * @param {} 
+ * @return: 
+ */
 app.get('/manage/question', (req, res) => {
-    res.send("获取问题列表");
+    DB.find('question', {}, (err, data) => {
+        // console.log(data);
+        if (err) {
+            res.json(status(0, '查询失败'));
+        } else {
+            res.json(status(1, '查询成功', data));
+        }
+    })
 });
 
 
