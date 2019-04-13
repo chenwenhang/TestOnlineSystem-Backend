@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:35:15
- * @LastEditTime: 2019-04-13 15:57:12
+ * @LastEditTime: 2019-04-13 17:10:45
  */
 var express = require('express');
 var router = express.Router();
@@ -46,12 +46,13 @@ router.post('/', (req, res) => {
  * @param {type} 
  * @return: 
  */
-router.post('/doRegister', (req, res) => {
+router.post('/register', (req, res) => {
+    req.body.password = md5(req.body.password);
     DB.insert('user', [req.body], (err, data) => {
         if (err) {
-            res.json(status(0, '注册失败'));
+            res.json(status(0, '添加失败'));
         } else {
-            res.json(status(1, '注册成功'));
+            res.json(status(1, '添加成功', data));
         }
     })
 });
@@ -61,7 +62,7 @@ router.post('/doRegister', (req, res) => {
  * @param {type} 
  * @return: 
  */
-router.post('/doLogout', (req, res) => {
+router.post('/logout', (req, res) => {
     req.session.destroy(function (err) {
         if (err) {
             res.json(status(0, '退出失败'));
