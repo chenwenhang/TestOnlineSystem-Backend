@@ -3,14 +3,14 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:57
- * @LastEditTime: 2019-04-13 14:21:19
+ * @LastEditTime: 2019-04-13 15:44:53
  */
-var express=require('express');
+var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var dateFormat = require('dateformat');
 var status = require('../../modules/status.js')
-var DB=require('../../modules/db.js');
+var DB = require('../../modules/db.js');
 
 
 /**
@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
 });
 
 /**
- * @description: get a question
+ * @description: get a question by id
  * @param {} 
  * @return: 
  */
@@ -43,6 +43,27 @@ router.get('/detail', (req, res) => {
             res.json(status(0, '查询失败'));
         } else {
             res.json(status(1, '查询成功', data[0]));
+        }
+    })
+});
+
+/**
+ * @description: get questions ambiguously
+ * @param {} 
+ * @return: 
+ */
+router.get('/ambiguous', (req, res) => {
+    // console.log(req.body.search);
+    DB.find('question', {
+        "content": {
+            $regex: req.query.search
+        }
+    }, (err, data) => {
+        // console.log(data);
+        if (err) {
+            res.json(status(0, '查询失败'));
+        } else {
+            res.json(status(1, '查询成功', data));
         }
     })
 });
@@ -90,7 +111,9 @@ router.put('/edit', (req, res) => {
  * @return: 
  */
 router.delete('/delete', (req, res) => {
-    DB.delete('question', {"_id": new DB.ObjectID(req.body._id)}, (err, data) => {
+    DB.delete('question', {
+        "_id": new DB.ObjectID(req.body._id)
+    }, (err, data) => {
         if (err) {
             res.json(status(0, '删除失败'));
         } else {

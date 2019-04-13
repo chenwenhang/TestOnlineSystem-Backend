@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:27
- * @LastEditTime: 2019-04-13 14:05:17
+ * @LastEditTime: 2019-04-13 14:38:25
  */
 var express=require('express');
 var router = express.Router();
@@ -26,5 +26,56 @@ router.get('/', (req, res) => {
         }
     })
 });
+
+/**
+ * @description: add a occupation
+ * @param {} 
+ * @return: 
+ */
+router.post('/add', (req, res) => {
+    DB.insert('occupation', [req.body], (err, data) => {
+        if (err) {
+            res.json(status(0, '添加失败'));
+        } else {
+            res.json(status(1, '添加成功', data));
+        }
+    })
+});
+
+/**
+ * @description: edit a occupation
+ * @param {} 
+ * @return: 
+ */
+router.put('/edit', (req, res) => {
+    json1 = {
+        "_id": new DB.ObjectID(req.body._id)
+    }
+    delete req.body._id;
+    // console.log(req.body);
+    DB.update('occupation', json1, req.body, (err, data) => {
+        if (err) {
+            res.json(status(0, '编辑失败'));
+        } else {
+            res.json(status(1, '编辑成功', data));
+        }
+    })
+});
+
+/**
+ * @description: delete a occupation by id
+ * @param {} 
+ * @return: 
+ */
+router.delete('/delete', (req, res) => {
+    DB.delete('occupation', {"_id": new DB.ObjectID(req.body._id)}, (err, data) => {
+        if (err) {
+            res.json(status(0, '删除失败'));
+        } else {
+            res.json(status(1, '删除成功', data));
+        }
+    })
+});
+
 
 module.exports = router;

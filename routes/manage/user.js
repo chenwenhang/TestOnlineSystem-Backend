@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:36:26
- * @LastEditTime: 2019-04-13 14:22:04
+ * @LastEditTime: 2019-04-13 15:46:55
  */
 var express = require('express');
 var router = express.Router();
@@ -44,6 +44,27 @@ router.get('/detail', (req, res) => {
             res.json(status(0, '查询失败'));
         } else {
             res.json(status(1, '查询成功', data[0]));
+        }
+    })
+});
+
+/**
+ * @description: get papers ambiguously
+ * @param {} 
+ * @return: 
+ */
+router.get('/ambiguous', (req, res) => {
+    // console.log(req.body.search);
+    DB.find('user', {
+        "username": {
+            $regex: req.query.search
+        }
+    }, (err, data) => {
+        // console.log(data);
+        if (err) {
+            res.json(status(0, '查询失败'));
+        } else {
+            res.json(status(1, '查询成功', data));
         }
     })
 });
