@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-13 10:08:04
+ * @LastEditTime: 2019-04-13 11:06:37
  */
  /**
  * 
@@ -64,7 +64,7 @@ app.use((req, res, next) => {
     } else if (req.session.userinfo && req.session.userinfo.username != '') {
         next();
     } else {
-        res.json(status(1, '未登录'));
+        res.json(status(0, '未登录'));
     }
 });
 
@@ -73,7 +73,7 @@ app.use('/manage', manage);
 
 //404
 app.use((req, res) => {
-    res.status(404).send('404ERROR');
+    res.json(status(0, '404错误'));
 })
 
 
