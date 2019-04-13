@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:39
- * @LastEditTime: 2019-04-13 15:45:27
+ * @LastEditTime: 2019-04-13 16:51:12
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -34,7 +34,9 @@ router.get('/', (req, res) => {
  * @return: 
  */
 router.get('/detail', (req, res) => {
-    DB.aggregate('paper', new DB.ObjectID(req.query._id), 'question', 'question_id', 'question', (err, data) => {
+    DB.find('paper', {
+        "_id": new DB.ObjectID(req.query._id)
+    }, (err, data) => {
         // console.log(data);
         if (err) {
             res.json(status(0, '查询失败'));
@@ -42,6 +44,14 @@ router.get('/detail', (req, res) => {
             res.json(status(1, '查询成功', data));
         }
     })
+    // DB.aggregate('paper', new DB.ObjectID(req.query._id), 'question', 'question_id', 'question', (err, data) => {
+    //     // console.log(data);
+    //     if (err) {
+    //         res.json(status(0, '查询失败'));
+    //     } else {
+    //         res.json(status(1, '查询成功', data));
+    //     }
+    // })
 });
 
 /**
@@ -74,12 +84,10 @@ router.post('/add', (req, res) => {
     // req.body.start_time = dateFormat(req.body.start_time, 'yyyy-mm-dd hh:MM:ss');
     // req.body.end_time = dateFormat(req.body.end_time, 'yyyy-mm-dd hh:MM:ss');
     req.body.is_valid = true;
-    req.body.question_id = [];
     req.body.create_user = new DB.ObjectID(req.body.create_user);
-    for (let i = 0, len = req.body.question.length; i < len; i++) {
-        req.body.question_id.push(new DB.ObjectID(req.body.question[i]._id));
+    for (let i = 0, len = req.body.questions.length; i < len; i++) {
+        req.body.questions[i]._id = new DB.ObjectID(req.body.questions[i]._id);
     }
-    delete req.body.question;
     // res.json(req.body);
     DB.insert('paper', [req.body], (err, data) => {
         if (err) {
@@ -100,12 +108,10 @@ router.put('/edit', (req, res) => {
         "_id": new DB.ObjectID(req.body._id)
     }
     delete req.body._id;
-    req.body.question_id = [];
-    for (let i = 0, len = req.body.question.length; i < len; i++) {
-        req.body.question_id.push(new DB.ObjectID(req.body.question[i]._id));
+    for (let i = 0, len = req.body.questions.length; i < len; i++) {
+        req.body.questions[i]._id = new DB.ObjectID(req.body.questions[i]._id);
     }
-    delete req.body.question;
-    
+
     // console.log(req.body);
     DB.update('paper', json1, req.body, (err, data) => {
         if (err) {

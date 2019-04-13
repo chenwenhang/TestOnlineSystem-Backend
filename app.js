@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-13 15:54:02
+ * @LastEditTime: 2019-04-13 17:04:56
  */
 /**
  * 
@@ -69,13 +69,13 @@ app.use((req, res, next) => {
 });
 
 app.use('/', index);
-app.use((req, res, next) => {
-    if (req.session.userinfo.power == 1) {
-        next();
-    } else {
-        res.json(status(0, '无权访问管理端'));
-    }
-})
+// app.use((req, res, next) => {
+//     if (req.session.userinfo.power == 1) {
+//         next();
+//     } else {
+//         res.json(status(0, '无权访问管理端'));
+//     }
+// })
 
 app.use('/manage', manage);
 

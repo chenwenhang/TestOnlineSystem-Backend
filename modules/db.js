@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-13 13:57:47
+ * @LastEditTime: 2019-04-13 16:21:47
  */
 
 var MongoClient = require('mongodb').MongoClient
@@ -34,7 +34,7 @@ exports.find = (collectionName, json, callback) => {
     })
 }
 /**
- * @description: join query
+ * @description: join query paper
  * @param {collectionName1, _id, collectionName2, localField, anotherName, callback} 
  * @return: 
  */
@@ -57,7 +57,7 @@ exports.aggregate = (collectionName1, _id, collectionName2, localField, anotherN
                     $ne: []
                 },
                 // conditionJson
-                _id:_id
+                _id: _id
             }
         }]).toArray((err, data) => {
             // assert.equal(err, null);
