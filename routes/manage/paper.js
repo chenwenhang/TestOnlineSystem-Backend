@@ -3,12 +3,12 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:39
- * @LastEditTime: 2019-04-12 21:40:59
+ * @LastEditTime: 2019-04-13 10:09:33
  */
 var express=require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
-var status = require('../tools/status.js');
+var status = require('../../modules/status.js');
 var DB=require('../../modules/db.js');
  
  /**
@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
 });
 
 /**
- * @description: get paper_detail by id
+ * @description: get a paper_detail by id
  * @param {id} 
  * @return: 
  */

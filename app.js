@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-12 21:36:12
+ * @LastEditTime: 2019-04-13 10:08:04
  */
  /**
  * 
@@ -15,7 +15,7 @@
 var express = require('express');
 var session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
-var status = require('./routes/tools/status.js');
+var status = require('./modules/status.js');
 var bodyParser = require('body-parser');
 
 var app = new express();
