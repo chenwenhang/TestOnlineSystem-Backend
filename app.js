@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-13 17:04:56
+ * @LastEditTime: 2019-04-18 23:05:20
  */
 /**
  * 
@@ -59,7 +59,7 @@ var index = require('./routes/index.js');
 var manage = require('./routes/manage.js');
 
 app.use((req, res, next) => {
-    if (req.url == '/login' || req.url == '/login/doRegister') {
+    if (req.url == '/login' || req.url == '/login/register') {
         next();
     } else if (req.session.userinfo && req.session.userinfo.username != '') {
         next();
