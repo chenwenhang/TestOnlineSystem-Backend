@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-18 23:05:20
+ * @LastEditTime: 2019-04-19 21:29:45
  */
 /**
  * 
@@ -58,15 +58,15 @@ app.all('*', (req, res, next) => {
 var index = require('./routes/index.js');
 var manage = require('./routes/manage.js');
 
-app.use((req, res, next) => {
-    if (req.url == '/login' || req.url == '/login/register') {
-        next();
-    } else if (req.session.userinfo && req.session.userinfo.username != '') {
-        next();
-    } else {
-        res.json(status(0, '未登录'));
-    }
-});
+// app.use((req, res, next) => {
+//     if (req.url == '/login' || req.url == '/login/register') {
+//         next();
+//     } else if (req.session.userinfo && req.session.userinfo.username != '') {
+//         next();
+//     } else {
+//         res.json(status(0, '未登录'));
+//     }
+// });
 
 app.use('/', index);
 // app.use((req, res, next) => {
