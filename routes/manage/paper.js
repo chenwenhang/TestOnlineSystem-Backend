@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:39
- * @LastEditTime: 2019-04-20 17:02:18
+ * @LastEditTime: 2019-04-20 20:17:20
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -144,7 +144,7 @@ router.put('/edit', (req, res) => {
  */
 router.delete('/delete', (req, res) => {
     DB.delete('paper', {
-        "_id": new DB.ObjectID(req.body._id)
+        "_id": new DB.ObjectID(req.query._id)
     }, (err, data) => {
         if (err) {
             res.json(status(0, '删除失败'));

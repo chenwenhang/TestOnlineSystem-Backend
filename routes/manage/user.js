@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:36:26
- * @LastEditTime: 2019-04-20 17:05:10
+ * @LastEditTime: 2019-04-20 20:17:08
  */
 var express = require('express');
 var router = express.Router();
@@ -127,7 +127,7 @@ router.put('/edit', (req, res) => {
  * @return: 
  */
 router.delete('/delete', (req, res) => {
-    DB.delete('user', {"_id": new DB.ObjectID(req.body._id)}, (err, data) => {
+    DB.delete('user', {"_id": new DB.ObjectID(req.query._id)}, (err, data) => {
         if (err) {
             res.json(status(0, '删除失败'));
         } else {
