@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:35:15
- * @LastEditTime: 2019-04-18 20:14:52
+ * @LastEditTime: 2019-04-20 21:57:48
  */
 var express = require('express');
 var router = express.Router();
@@ -48,6 +48,7 @@ router.post('/', (req, res) => {
  */
 router.post('/register', (req, res) => {
     req.body.password = md5(req.body.password);
+    req.body.power = 3;
     DB.find('user', req.body, function (err, data) {
         if (data.length > 0) {
             res.json(status(0, '注册失败，用户已存在', data[0]));
