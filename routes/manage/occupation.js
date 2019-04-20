@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:27
- * @LastEditTime: 2019-04-20 17:03:02
+ * @LastEditTime: 2019-04-20 17:12:11
  */
 var express = require('express');
 var router = express.Router();
@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
             "occupation": {
                 $regex: req.query.occupation
             }
-        }, (err, data) => {
+        }, (err, data, count) => {
             // console.log(data);
             if (err) {
                 res.json(status(0, '查询失败'));
@@ -31,7 +31,7 @@ router.get('/', (req, res) => {
             }
         }, req.query.page, req.query.size)
     } else {
-        DB.find('occupation', {}, (err, data) => {
+        DB.find('occupation', {}, (err, data, count) => {
             // console.log(data);
             if (err) {
                 res.json(status(0, '查询失败'));
