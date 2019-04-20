@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:39
- * @LastEditTime: 2019-04-20 14:26:26
+ * @LastEditTime: 2019-04-20 17:02:18
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -18,28 +18,28 @@ var DB = require('../../modules/db.js');
  * @return: 
  */
 router.get('/', (req, res) => {
-    if(req.query.title){
+    if (req.query.title) {
         DB.find('paper', {
             "title": {
                 $regex: req.query.title
             }
-        }, (err, data) => {
+        }, (err, data, count) => {
             // console.log(data);
             if (err) {
                 res.json(status(0, '查询失败'));
             } else {
-                res.json(status(1, '查询成功', data));
+                res.json(status(1, '查询成功', data, count));
             }
-        })
-    }else{
-        DB.find('paper', {}, (err, data) => {
+        }, req.query.page, req.query.size)
+    } else {
+        DB.find('paper', {}, (err, data, count) => {
             // console.log(data);
             if (err) {
                 res.json(status(0, '查询失败'));
             } else {
-                res.json(status(1, '查询成功', data));
+                res.json(status(1, '查询成功', data, count));
             }
-        })
+        }, req.query.page, req.query.size)
     }
 });
 

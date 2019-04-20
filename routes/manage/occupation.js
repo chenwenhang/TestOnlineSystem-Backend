@@ -3,13 +3,13 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:27
- * @LastEditTime: 2019-04-20 14:33:07
+ * @LastEditTime: 2019-04-20 17:03:02
  */
-var express=require('express');
+var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var status = require('../../modules/status.js');
-var DB=require('../../modules/db.js');
+var DB = require('../../modules/db.js');
 
 /**
  * @description: get all occupations
@@ -17,7 +17,7 @@ var DB=require('../../modules/db.js');
  * @return: 
  */
 router.get('/', (req, res) => {
-    if(req.query.occupation){
+    if (req.query.occupation) {
         DB.find('occupation', {
             "occupation": {
                 $regex: req.query.occupation
@@ -27,20 +27,20 @@ router.get('/', (req, res) => {
             if (err) {
                 res.json(status(0, '查询失败'));
             } else {
-                res.json(status(1, '查询成功', data));
+                res.json(status(1, '查询成功', data, count));
             }
-        })
-    }else{
+        }, req.query.page, req.query.size)
+    } else {
         DB.find('occupation', {}, (err, data) => {
             // console.log(data);
             if (err) {
                 res.json(status(0, '查询失败'));
             } else {
-                res.json(status(1, '查询成功', data));
+                res.json(status(1, '查询成功', data, count));
             }
-        })
+        }, req.query.page, req.query.size)
     }
-    
+
 });
 
 /**
@@ -84,7 +84,9 @@ router.put('/edit', (req, res) => {
  * @return: 
  */
 router.delete('/delete', (req, res) => {
-    DB.delete('occupation', {"_id": new DB.ObjectID(req.body._id)}, (err, data) => {
+    DB.delete('occupation', {
+        "_id": new DB.ObjectID(req.body._id)
+    }, (err, data) => {
         if (err) {
             res.json(status(0, '删除失败'));
         } else {

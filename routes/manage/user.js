@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:36:26
- * @LastEditTime: 2019-04-13 15:46:55
+ * @LastEditTime: 2019-04-20 17:05:10
  */
 var express = require('express');
 var router = express.Router();
@@ -18,15 +18,29 @@ var DB = require('../../modules/db.js');
  * @return: 
  */
 router.get('/', (req, res) => {
-
-    DB.find('user', {}, (err, data) => {
-        // console.log(data);
-        if (err) {
-            res.json(status(0, '查询失败'));
-        } else {
-            res.json(status(1, '查询成功', data));
-        }
-    })
+    if (req.query.username) {
+        DB.find('user', {
+            "username": {
+                $regex: req.query.username
+            }
+        }, (err, data, count) => {
+            // console.log(data);
+            if (err) {
+                res.json(status(0, '查询失败'));
+            } else {
+                res.json(status(1, '查询成功', data, count));
+            }
+        }, req.query.page, req.query.size)
+    } else {
+        DB.find('user', {}, (err, data, count) => {
+            // console.log(data);
+            if (err) {
+                res.json(status(0, '查询失败'));
+            } else {
+                res.json(status(1, '查询成功', data, count));
+            }
+        }, req.query.page, req.query.size)
+    }
 });
 
 /**

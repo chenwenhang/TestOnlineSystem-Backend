@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-13 16:21:47
+ * @LastEditTime: 2019-04-20 16:59:11
  */
 
 var MongoClient = require('mongodb').MongoClient
@@ -22,15 +22,28 @@ var __connectDB = (callback) => {
 
 exports.ObjectID = ObjectID;
 
-exports.find = (collectionName, json, callback) => {
+exports.find = (collectionName, json, callback, page = 0, size = 0) => {
     __connectDB((client) => {
+        page = parseInt(page);
+        size = parseInt(size);
         const db = client.db(dbName);
         const collection = db.collection(collectionName);
-        collection.find(json).toArray((err, data) => {
-            // assert.equal(err, null);
-            client.close();
-            callback(err, data);
+        // if (page && size) {
+        collection.find(json).count((err, data) => {
+            var count = data;
+            collection.find(json).skip((page - 1) * size).limit(size).toArray((err, data) => {
+                // assert.equal(err, null);
+                client.close();
+                callback(err, data, count);
+            });
         });
+        // } else {
+        //     collection.find(json).toArray((err, data) => {
+        //         // assert.equal(err, null);
+        //         client.close();
+        //         callback(err, data);
+        //     });
+        // }
     })
 }
 /**
