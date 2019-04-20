@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:39
- * @LastEditTime: 2019-04-13 16:51:12
+ * @LastEditTime: 2019-04-20 14:26:26
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -13,19 +13,34 @@ var status = require('../../modules/status.js');
 var DB = require('../../modules/db.js');
 
 /**
- * @description: get all papers
+ * @description: get papers, support ambiguous query
  * @param {} 
  * @return: 
  */
 router.get('/', (req, res) => {
-    DB.find('paper', {}, (err, data) => {
-        // console.log(data);
-        if (err) {
-            res.json(status(0, '查询失败'));
-        } else {
-            res.json(status(1, '查询成功', data));
-        }
-    })
+    if(req.query.title){
+        DB.find('paper', {
+            "title": {
+                $regex: req.query.title
+            }
+        }, (err, data) => {
+            // console.log(data);
+            if (err) {
+                res.json(status(0, '查询失败'));
+            } else {
+                res.json(status(1, '查询成功', data));
+            }
+        })
+    }else{
+        DB.find('paper', {}, (err, data) => {
+            // console.log(data);
+            if (err) {
+                res.json(status(0, '查询失败'));
+            } else {
+                res.json(status(1, '查询成功', data));
+            }
+        })
+    }
 });
 
 /**
@@ -59,21 +74,21 @@ router.get('/detail', (req, res) => {
  * @param {} 
  * @return: 
  */
-router.get('/ambiguous', (req, res) => {
-    // console.log(req.body.search);
-    DB.find('paper', {
-        "title": {
-            $regex: req.query.search
-        }
-    }, (err, data) => {
-        // console.log(data);
-        if (err) {
-            res.json(status(0, '查询失败'));
-        } else {
-            res.json(status(1, '查询成功', data));
-        }
-    })
-});
+// router.get('/ambiguous', (req, res) => {
+//     // console.log(req.body.search);
+//     DB.find('paper', {
+//         "title": {
+//             $regex: req.query.search
+//         }
+//     }, (err, data) => {
+//         // console.log(data);
+//         if (err) {
+//             res.json(status(0, '查询失败'));
+//         } else {
+//             res.json(status(1, '查询成功', data));
+//         }
+//     })
+// });
 
 /**
  * @description: add a paper

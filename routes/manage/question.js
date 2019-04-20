@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:57
- * @LastEditTime: 2019-04-13 15:44:53
+ * @LastEditTime: 2019-04-20 14:28:50
  */
 var express = require('express');
 var router = express.Router();
@@ -14,19 +14,34 @@ var DB = require('../../modules/db.js');
 
 
 /**
- * @description: get all questions
+ * @description: get questions, support ambiguous query
  * @param {} 
  * @return: 
  */
 router.get('/', (req, res) => {
-    DB.find('question', {}, (err, data) => {
-        // console.log(data);
-        if (err) {
-            res.json(status(0, '查询失败'));
-        } else {
-            res.json(status(1, '查询成功', data));
-        }
-    })
+    if(req.query.content){
+        DB.find('question', {
+            "content": {
+                $regex: req.query.content
+            }
+        }, (err, data) => {
+            // console.log(data);
+            if (err) {
+                res.json(status(0, '查询失败'));
+            } else {
+                res.json(status(1, '查询成功', data));
+            }
+        })
+    }else{
+        DB.find('question', {}, (err, data) => {
+            // console.log(data);
+            if (err) {
+                res.json(status(0, '查询失败'));
+            } else {
+                res.json(status(1, '查询成功', data));
+            }
+        })
+    }
 });
 
 /**
@@ -52,21 +67,21 @@ router.get('/detail', (req, res) => {
  * @param {} 
  * @return: 
  */
-router.get('/ambiguous', (req, res) => {
-    // console.log(req.body.search);
-    DB.find('question', {
-        "content": {
-            $regex: req.query.search
-        }
-    }, (err, data) => {
-        // console.log(data);
-        if (err) {
-            res.json(status(0, '查询失败'));
-        } else {
-            res.json(status(1, '查询成功', data));
-        }
-    })
-});
+// router.get('/ambiguous', (req, res) => {
+//     // console.log(req.body.search);
+//     DB.find('question', {
+//         "content": {
+//             $regex: req.query.search
+//         }
+//     }, (err, data) => {
+//         // console.log(data);
+//         if (err) {
+//             res.json(status(0, '查询失败'));
+//         } else {
+//             res.json(status(1, '查询成功', data));
+//         }
+//     })
+// });
 
 /**
  * @description: add a question
