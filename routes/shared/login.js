@@ -3,12 +3,14 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:35:15
- * @LastEditTime: 2019-04-20 21:57:48
+ * @LastEditTime: 2019-04-22 00:38:56
  */
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var md5 = require('md5');
+var multiparty = require('multiparty');
+var util = require('util');
 var status = require('../../modules/status.js');
 var DB = require('../../modules/db.js');
 
@@ -62,7 +64,7 @@ router.post('/register', (req, res) => {
             })
         }
     })
-    
+
 });
 
 /**
@@ -78,6 +80,40 @@ router.post('/logout', (req, res) => {
             res.json(status(1, '退出成功'));
         }
     })
+});
+
+/**
+ * @description: upload picture
+ * @param {type} 
+ * @return: 
+ */
+router.post('/upload', (req, res) => {
+
+    var form = new multiparty.Form();
+    // upload dir
+    form.uploadDir = 'upload/image';
+    form.parse(req, (err, fields, files) => {
+        console.log(555);
+
+        Object.keys(files).forEach(key => {
+            var file = files[key];
+            var pic = file[0].path;
+            let json1 = {
+                "_id": new DB.ObjectID(key)
+            }
+            let json2 = {
+                "avatar": pic
+            }
+            DB.update('user', json1, json2, (err, data) => {
+                if (err) {
+                    res.json(status(0, '编辑失败'));
+                } else {
+                    res.json(status(1, '编辑成功', data));
+                }
+            })
+
+        });
+    });
 });
 
 module.exports = router;

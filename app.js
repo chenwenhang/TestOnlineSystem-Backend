@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-19 21:29:45
+ * @LastEditTime: 2019-04-22 00:12:10
  */
 /**
  * 
@@ -44,10 +44,14 @@ app.use(session({
 //set cross domain header
 app.all('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    res.header('Access-Control-Allow-Methods', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
+    res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
     res.header('Content-Type', 'application/json;charset=utf-8');
-    next();
+    if (req.method == "OPTIONS") {
+        res.send(200);
+    } else {
+        next();
+    }
 });
 
 /**
