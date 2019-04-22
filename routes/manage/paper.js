@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:39
- * @LastEditTime: 2019-04-20 20:17:20
+ * @LastEditTime: 2019-04-22 21:58:05
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -99,7 +99,10 @@ router.post('/add', (req, res) => {
     // req.body.start_time = dateFormat(req.body.start_time, 'yyyy-mm-dd hh:MM:ss');
     // req.body.end_time = dateFormat(req.body.end_time, 'yyyy-mm-dd hh:MM:ss');
     req.body.is_valid = true;
-    req.body.create_user = new DB.ObjectID(req.body.create_user);
+    // req.body.create_user = new DB.ObjectID(req.body.create_user);
+    req.body.start_time = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
+    req.body.start_time = dateFormat(req.body.start_time, 'yyyy-mm-dd HH:MM:ss');
+    req.body.end_time = dateFormat(req.body.end_time, 'yyyy-mm-dd HH:MM:ss');
     for (let i = 0, len = req.body.questions.length; i < len; i++) {
         req.body.questions[i]._id = new DB.ObjectID(req.body.questions[i]._id);
     }
