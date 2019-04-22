@@ -43,4 +43,4 @@ testem.log
 Thumbs.db
 
 # Upload files
-# upload/image/*
+upload/image/*
