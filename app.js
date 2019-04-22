@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-22 00:12:10
+ * @LastEditTime: 2019-04-22 12:30:12
  */
 /**
  * 
@@ -41,6 +41,9 @@ app.use(session({
         touchAfter: 24 * 3600
     })
 }))
+
+app.use('/upload',express.static('upload'));
+
 //set cross domain header
 app.all('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -71,7 +74,6 @@ var manage = require('./routes/manage.js');
 //         res.json(status(0, '未登录'));
 //     }
 // });
-
 app.use('/', index);
 // app.use((req, res, next) => {
 //     if (req.session.userinfo.power == 1) {

@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:35:15
- * @LastEditTime: 2019-04-22 00:38:56
+ * @LastEditTime: 2019-04-22 16:37:28
  */
 var express = require('express');
 var router = express.Router();
@@ -93,22 +93,33 @@ router.post('/upload', (req, res) => {
     // upload dir
     form.uploadDir = 'upload/image';
     form.parse(req, (err, fields, files) => {
-        console.log(555);
 
         Object.keys(files).forEach(key => {
             var file = files[key];
-            var pic = file[0].path;
+            var picUrl = 'http://localhost:3000/' + file[0].path.replace(/\\/g, "/");
+            // console.log(picUrl);
             let json1 = {
                 "_id": new DB.ObjectID(key)
             }
             let json2 = {
-                "avatar": pic
+                "avatar": picUrl
             }
+            // console.log(files);
+            // console.log(picUrl);
+
             DB.update('user', json1, json2, (err, data) => {
                 if (err) {
                     res.json(status(0, '编辑失败'));
                 } else {
-                    res.json(status(1, '编辑成功', data));
+                    // res.json(status(1, '编辑成功', {
+                    //     picUrl: picUrl
+                    // }));
+                    res.json({
+                        body: {
+                            resource_id: key,
+                            url: picUrl
+                        },
+                    });
                 }
             })
 
