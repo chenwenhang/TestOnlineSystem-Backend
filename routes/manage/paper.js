@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:39
- * @LastEditTime: 2019-04-22 22:01:24
+ * @LastEditTime: 2019-04-22 22:06:38
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -98,7 +98,7 @@ router.get('/detail', (req, res) => {
 router.post('/add', (req, res) => {
     // req.body.start_time = dateFormat(req.body.start_time, 'yyyy-mm-dd hh:MM:ss');
     // req.body.end_time = dateFormat(req.body.end_time, 'yyyy-mm-dd hh:MM:ss');
-    req.body.is_valid = true;
+    // req.body.is_valid = true;
     // req.body.create_user = new DB.ObjectID(req.body.create_user);
     req.body.create_time = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
     req.body.start_time = dateFormat(req.body.start_time, 'yyyy-mm-dd HH:MM:ss');
@@ -122,6 +122,8 @@ router.post('/add', (req, res) => {
  * @return: 
  */
 router.put('/edit', (req, res) => {
+    req.body.start_time = dateFormat(req.body.start_time, 'yyyy-mm-dd HH:MM:ss');
+    req.body.end_time = dateFormat(req.body.end_time, 'yyyy-mm-dd HH:MM:ss');
     json1 = {
         "_id": new DB.ObjectID(req.body._id)
     }
