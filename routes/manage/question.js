@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:57
- * @LastEditTime: 2019-04-21 19:35:40
+ * @LastEditTime: 2019-04-22 21:58:01
  */
 var express = require('express');
 var router = express.Router();
@@ -89,8 +89,7 @@ router.get('/detail', (req, res) => {
  * @return: 
  */
 router.post('/add', (req, res) => {
-    const now = new Date();
-    req.body.create_time = dateFormat(now, 'yyyy-mm-dd HH:MM:ss');
+    req.body.create_time = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
     DB.insert('question', [req.body], (err, data) => {
         if (err) {
             res.json(status(0, '添加失败'));
