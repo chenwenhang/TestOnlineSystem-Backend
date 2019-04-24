@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:57
- * @LastEditTime: 2019-04-22 21:58:01
+ * @LastEditTime: 2019-04-24 12:30:52
  */
 var express = require('express');
 var router = express.Router();
@@ -58,6 +58,28 @@ router.get('/detail', (req, res) => {
             res.json(status(0, '查询失败'));
         } else {
             res.json(status(1, '查询成功', data[0]));
+        }
+    })
+});
+
+/**
+ * @description: get random questions
+ * @param {} 
+ * @return: 
+ */
+router.post('/random', (req, res) => {
+    DB.aggregate('question', {
+        "tag": {
+            "$in": req.body.tag
+        }
+    }, req.body.size, (err, data) => {
+        // console.log(data);
+        if (err) {
+            console.log(err);
+
+            res.json(status(0, '查询失败'));
+        } else {
+            res.json(status(1, '查询成功', data));
         }
     })
 });
