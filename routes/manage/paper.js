@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:39
- * @LastEditTime: 2019-04-22 22:06:38
+ * @LastEditTime: 2019-04-25 15:10:03
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -33,6 +33,42 @@ router.get('/', (req, res) => {
         }, req.query.page, req.query.size)
     } else {
         DB.find('paper', {}, (err, data, count) => {
+            // console.log(data);
+            if (err) {
+                res.json(status(0, '查询失败'));
+            } else {
+                res.json(status(1, '查询成功', data, count));
+            }
+        }, req.query.page, req.query.size)
+    }
+});
+
+/**
+ * @description: get formal papers list
+ * @param {} 
+ * @return: 
+ */
+router.get('/list', (req, res) => {
+    if (req.query.title) {
+        DB.find('paper', {
+            "title": {
+                $regex: req.query.title
+            },
+            "is_valid":true,
+            "is_public":true
+        }, (err, data, count) => {
+            // console.log(data);
+            if (err) {
+                res.json(status(0, '查询失败'));
+            } else {
+                res.json(status(1, '查询成功', data, count));
+            }
+        }, req.query.page, req.query.size)
+    } else {
+        DB.find('paper', {
+            "is_valid":true,
+            "is_public":true
+        }, (err, data, count) => {
             // console.log(data);
             if (err) {
                 res.json(status(0, '查询失败'));
