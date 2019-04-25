@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-13 16:00:59
- * @LastEditTime: 2019-04-25 13:23:26
+ * @LastEditTime: 2019-04-25 15:05:19
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
             "title": {
                 $regex: req.query.title
             },
-            "user_id": new DB.ObjectID(req.session.userinfo._id)
+            "username": req.query.username
         }, (err, data, count) => {
             // console.log(data);
             if (err) {
@@ -35,7 +35,7 @@ router.get('/', (req, res) => {
         }, req.query.page, req.query.size)
     } else {
         DB.find('paper_history', {
-            "user_id": new DB.ObjectID(req.session.userinfo._id)
+            "username": req.query.username
         }, (err, data, count) => {
             // console.log(data);
             if (err) {
@@ -46,17 +46,6 @@ router.get('/', (req, res) => {
         }, req.query.page, req.query.size)
     }
 
-
-    // DB.aggregate('paper_history', new DB.ObjectID(req.session.userinfo._id), 'question', 'answer', 'question', (err, data) => {
-    //     // console.log(data);
-    //     if (err) {
-    //         console.log(err);
-
-    //         res.json(status(0, '查询失败'));
-    //     } else {
-    //         res.json(status(1, '查询成功', data));
-    //     }
-    // })
 });
 
 /**
@@ -68,7 +57,7 @@ router.get('/detail', (req, res) => {
     // console.log(req.session);
 
     DB.find('paper_history', {
-        "_id": new DB.ObjectID(req.body_id)
+        "_id": new DB.ObjectID(req.query._id)
     }, (err, data) => {
         // console.log(data);
         if (err) {
@@ -78,16 +67,6 @@ router.get('/detail', (req, res) => {
         }
     })
 
-    // DB.aggregate('paper_history', new DB.ObjectID(req.session.userinfo._id), 'question', 'answer', 'question', (err, data) => {
-    //     // console.log(data);
-    //     if (err) {
-    //         console.log(err);
-
-    //         res.json(status(0, '查询失败'));
-    //     } else {
-    //         res.json(status(1, '查询成功', data));
-    //     }
-    // })
 });
 
 /**
