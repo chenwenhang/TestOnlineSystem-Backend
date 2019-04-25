@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-13 16:00:59
- * @LastEditTime: 2019-04-20 17:02:42
+ * @LastEditTime: 2019-04-25 12:24:27
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -96,24 +96,36 @@ router.get('/detail', (req, res) => {
  * @return: 
  */
 router.post('/add', (req, res) => {
-    // req.body.start_time = dateFormat(req.body.start_time, 'yyyy-mm-dd hh:MM:ss');
-    // req.body.end_time = dateFormat(req.body.end_time, 'yyyy-mm-dd hh:MM:ss');
-    req.body._id = new DB.ObjectID(req.body._id);
-    req.body.paper_id = new DB.ObjectID(req.body.paper_id);
-    req.body.user_id = new DB.ObjectID(req.body.user_id);
-    for (let i = 0, len = req.body.questions.length; i < len; i++) {
-        req.body.questions[i]._id = new DB.ObjectID(req.body.questions[i]._id);
+    let questions = req.body.questions;
+    // caculate score 
+    let score = 0
+    for (let i = 0; i < questions.length; i++) {
+        score += checkAnswer(questions[i]);
     }
-    // res.json(req.body);
+    req.body.my_mark = score;
+    delete req.body._id;
+    delete req.body._value;
+    // res.json(status(1, '添加成功', req.body));
     DB.insert('paper_history', [req.body], (err, data) => {
         if (err) {
+            console.log(err);
+
             res.json(status(0, '添加失败'));
         } else {
-            res.json(status(1, '添加成功', data));
+            res.json(status(1, '添加成功', {
+                my_mark: req.body.my_mark
+            }));
         }
     })
 });
 
+var checkAnswer = (question) => {
+    if (question.right == question.answer) {
+        return parseInt(question.score);
+    } else {
+        return 0;
+    }
+}
 
 
 module.exports = router;
