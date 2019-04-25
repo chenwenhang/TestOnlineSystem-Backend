@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-13 16:00:59
- * @LastEditTime: 2019-04-25 15:05:19
+ * @LastEditTime: 2019-04-25 23:24:04
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -79,7 +79,27 @@ router.post('/add', (req, res) => {
     // caculate score 
     let score = 0
     for (let i = 0; i < questions.length; i++) {
-        score += checkAnswer(questions[i]);
+        let s = checkAnswer(questions[i]);
+        if (!s) {
+            let que = JSON.parse(JSON.stringify(questions[i]));
+            que.username = req.body.username;
+            que.question_id = questions[i]._id;
+            delete que._id;
+
+            // req.body._id = new DB.ObjectID(req.body._id);
+            DB.insert('question_collection', [que], (err, data) => {
+                if (err) {
+                    // res.json(status(0, '添加错题失败'));
+                    console.log(err);
+
+                } else {
+                    // res.json(status(1, '添加错题成功', data));
+                }
+            })
+        } else {
+            score += s
+        }
+
     }
     req.body.my_mark = score;
     delete req.body._id;
