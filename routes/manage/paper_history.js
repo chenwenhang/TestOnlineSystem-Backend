@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-13 16:00:59
- * @LastEditTime: 2019-04-25 12:24:27
+ * @LastEditTime: 2019-04-25 13:23:26
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -108,12 +108,13 @@ router.post('/add', (req, res) => {
     // res.json(status(1, '添加成功', req.body));
     DB.insert('paper_history', [req.body], (err, data) => {
         if (err) {
-            console.log(err);
-
             res.json(status(0, '添加失败'));
         } else {
+            // console.log(data);
+
             res.json(status(1, '添加成功', {
-                my_mark: req.body.my_mark
+                my_mark: req.body.my_mark,
+                _id: data.ops[0]._id
             }));
         }
     })
