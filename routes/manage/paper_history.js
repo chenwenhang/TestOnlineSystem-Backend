@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-13 16:00:59
- * @LastEditTime: 2019-04-25 23:24:04
+ * @LastEditTime: 2019-04-26 13:17:56
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -86,16 +86,32 @@ router.post('/add', (req, res) => {
             que.question_id = questions[i]._id;
             delete que._id;
 
-            // req.body._id = new DB.ObjectID(req.body._id);
-            DB.insert('question_collection', [que], (err, data) => {
+            let tmp = JSON.parse(JSON.stringify(que));
+            delete tmp.answer;
+            // if exist
+            DB.find('question_collection', tmp, (err, data) => {
                 if (err) {
                     // res.json(status(0, '添加错题失败'));
                     console.log(err);
-
                 } else {
                     // res.json(status(1, '添加错题成功', data));
+                    if (data.length == 0) {
+
+                        // if not exist, insert
+                        DB.insert('question_collection', [que], (err, data) => {
+                            if (err) {
+                                // res.json(status(0, '添加错题失败'));
+                                console.log(err);
+
+                            } else {
+                                // res.json(status(1, '添加错题成功', data));
+                            }
+                        })
+                    }
                 }
             })
+
+
         } else {
             score += s
         }

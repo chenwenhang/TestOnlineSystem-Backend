@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-25 18:28:18
- * @LastEditTime: 2019-04-25 22:59:36
+ * @LastEditTime: 2019-04-26 13:36:20
  */
 var express = require('express');
 var dateFormat = require('dateformat');
@@ -92,27 +92,36 @@ router.post('/check', (req, res) => {
     let username = req.body.username;
     let collectionNum = [];
     for (let i = 0; i < collectionId.length; i++) {
-        let question_id = collectionId[i];
-        DB.find('question_collection', {
-            "question_id": question_id,
-            "username": username
-        }, (err, data) => {
-            if (err) {
-                // console.log(err);
-                res.json(status(0, '检验失败'));
-            } else {
-                if (data.length != 0) {
-                    collectionNum.push(1);
+        collectionNum.push(null);
+    }
+    for (var i = 0; i < collectionId.length; i++) {
+        (function (i) {
+            let question_id = collectionId[i];
+            DB.find('question_collection', {
+                "question_id": question_id,
+                "username": username
+            }, (err, data) => {
+                if (err) {
+                    // console.log(err);
+                    res.json(status(0, '检验失败'));
                 } else {
-                    collectionNum.push(0);
-                }
-                if (collectionNum.length == collectionId.length) {
-                    // console.log(collectionNum);
-                    res.json(status(1, '检验成功', collectionNum));
+                    if (data.length != 0) {
+                        collectionNum[i] = 1;
+                    } else {
+                        collectionNum[i] = 0;
+                    }
+                    for (let j = 0; j < collectionNum.length; j++) {
+                        if (collectionNum[j] === null) {
+                            return;
+                        }
 
+                    }
+                    // console.log(collectionNum);
+
+                    res.json(status(1, '检验成功', collectionNum));
                 }
-            }
-        })
+            })
+        })(i);
     }
 
 
