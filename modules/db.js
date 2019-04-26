@@ -3,18 +3,18 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-24 12:30:12
+ * @LastEditTime: 2019-04-26 18:21:41
  */
 
 var MongoClient = require('mongodb').MongoClient
 var ObjectID = require('mongodb').ObjectID;
-const dbUrl = 'mongodb://localhost:27017';
+const dbUrl = 'mongodb://127.0.0.1:27017';
 const dbName = 'exam';
 const assert = require('assert');
 
 var __connectDB = (callback) => {
     MongoClient.connect(dbUrl, (err, client) => {
-        assert.equal(null, err);
+        // assert.equal(null, err);
         // console.log("Connected successfully to server");
         callback(client);
     })
