@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-22 12:30:12
+ * @LastEditTime: 2019-04-26 22:43:42
  */
 /**
  * 
@@ -43,6 +43,7 @@ app.use(session({
 }))
 
 app.use('/upload',express.static('upload'));
+app.use('/public',express.static('public'));
 
 //set cross domain header
 app.all('*', (req, res, next) => {
