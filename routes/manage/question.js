@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:59:57
- * @LastEditTime: 2019-04-27 14:10:22
+ * @LastEditTime: 2019-04-27 16:37:14
  */
 var express = require('express');
 var router = express.Router();
@@ -112,6 +112,21 @@ router.post('/random', (req, res) => {
 router.post('/add', (req, res) => {
     req.body.create_time = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
     DB.insert('question', [req.body], (err, data) => {
+        if (err) {
+            res.json(status(0, '添加失败'));
+        } else {
+            res.json(status(1, '添加成功', data));
+        }
+    })
+});
+
+/**
+ * @description: add a question
+ * @param {} 
+ * @return: 
+ */
+router.post('/addMultiple', (req, res) => {
+    DB.insert('question', req.body, (err, data) => {
         if (err) {
             res.json(status(0, '添加失败'));
         } else {
