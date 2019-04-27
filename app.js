@@ -3,7 +3,7 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-26 22:43:42
+ * @LastEditTime: 2019-04-27 14:12:19
  */
 /**
  * 
@@ -42,6 +42,7 @@ app.use(session({
     })
 }))
 
+// set static folder
 app.use('/upload',express.static('upload'));
 app.use('/public',express.static('public'));
 
@@ -58,14 +59,15 @@ app.all('*', (req, res, next) => {
     }
 });
 
+
+var index = require('./routes/index.js');
+var manage = require('./routes/manage.js');
+
 /**
  * @description: judge power
  * @param {type} 
  * @return: 
  */
-var index = require('./routes/index.js');
-var manage = require('./routes/manage.js');
-
 // app.use((req, res, next) => {
 //     if (req.url == '/login' || req.url == '/login/register') {
 //         next();
@@ -95,64 +97,3 @@ app.use((req, res) => {
 
 
 app.listen(3000, '127.0.0.1');
-
-
-
-
-
-// get req.body
-// app.get('/doLogin', (req, res) => {
-//set signed cookie
-// res.cookie('username', 'value', {
-//     secret: 'ssss',
-//     maxAge: 60000,
-//     signed: true
-// });
-
-//get signed cookie
-// console.log(req.signedCookies.username);
-
-//set session
-// req.session.userinfo = "abc";
-
-//logout by set maxAge
-// req.session.maxAge = 0;
-
-//logout by destory
-// req.session.destroy(function (err) {
-//     console.log(err)
-// });
-
-//get req.body
-// console.log(req.body);
-// res.send("hello")
-
-// });
-/*
-
-//应用级中间件，用于权限判断等，可写在匹配前或后
-app.use('/product', function (req, res, next) {
-    console.log('product中间件通过app.use');
-    //继续向下匹配，没有则卡在这
-    next();
-})
-
-app.get('/', (req, res) => {
-    res.send('express');
-});
-
-//动态传参        http://localhost:3000/news/xxx
-app.get('/news/:aid', (req, res) => {
-    //req.params获取动态参数         
-    var aid = req.params.aid; //  { aid: 'xxx' }
-    res.send('news' + aid);
-});
-
-//获取get传值     http://localhost:3000/product?aid=xxx&cid=yyy
-app.get('/product', (req, res) => {
-    //req.query获取get参数         
-    console.log(req.query); //  { aid: 'xxx', cid: 'yyy' }
-    res.send('product' + req.query.aid);
-});
-
-*/

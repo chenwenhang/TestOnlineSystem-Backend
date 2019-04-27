@@ -3,14 +3,13 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 20:35:15
- * @LastEditTime: 2019-04-22 16:37:28
+ * @LastEditTime: 2019-04-27 14:10:36
  */
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var md5 = require('md5');
 var multiparty = require('multiparty');
-var util = require('util');
 var status = require('../../modules/status.js');
 var DB = require('../../modules/db.js');
 

@@ -3,14 +3,14 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-12 15:06:28
- * @LastEditTime: 2019-04-26 18:21:41
+ * @LastEditTime: 2019-04-27 14:10:54
  */
 
 var MongoClient = require('mongodb').MongoClient
 var ObjectID = require('mongodb').ObjectID;
 const dbUrl = 'mongodb://127.0.0.1:27017';
 const dbName = 'exam';
-const assert = require('assert');
+// const assert = require('assert');
 
 var __connectDB = (callback) => {
     MongoClient.connect(dbUrl, (err, client) => {

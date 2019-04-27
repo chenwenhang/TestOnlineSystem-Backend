@@ -3,12 +3,10 @@
  * @Description: 
  * @Github: https://github.com/chenwenhang
  * @Date: 2019-04-13 16:00:59
- * @LastEditTime: 2019-04-26 13:17:56
+ * @LastEditTime: 2019-04-27 14:10:06
  */
 var express = require('express');
-var dateFormat = require('dateformat');
 var router = express.Router();
-var bodyParser = require('body-parser');
 var status = require('../../modules/status.js');
 var DB = require('../../modules/db.js');
 
