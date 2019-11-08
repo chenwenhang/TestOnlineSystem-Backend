@@ -7,7 +7,7 @@
     "cookie-parser": "^1.4.4",
     "dateformat": "^3.0.3",
     "express": "^4.16.4",
-    "express-session": "^1.15.6",
+    "express-session": "^1.17.0",
     "md5": "^2.2.1",
     "mongodb": "^3.2.3",
     "multiparty": "^4.2.1"
