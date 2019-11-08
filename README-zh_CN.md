@@ -1,7 +1,7 @@
 <!--
  * @Author: Chen Wenhang
  * @Date: 2019-10-19 21:59:24
- * @LastEditTime: 2019-11-08 16:02:24
+ * @LastEditTime: 2019-11-08 16:10:09
  * @Description: 
  * @Github: https://github.com/chenwenhang
  -->
@@ -31,7 +31,7 @@ TestOnlineSystem采用Angular 7、Nodejs开发平台、Express框架和MongoDB�
 
 ```bash
 npm install
-node app.js
+node app.js # 监听 localhost:3000
 ```
 
 ## 特点

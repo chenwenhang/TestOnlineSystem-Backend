@@ -1,7 +1,7 @@
 <!--
  * @Author: Chen Wenhang
  * @Date: 2019-10-19 21:59:24
- * @LastEditTime: 2019-11-08 16:06:27
+ * @LastEditTime: 2019-11-08 16:09:50
  * @Description: 
  * @Github: https://github.com/chenwenhang
  -->
@@ -32,7 +32,7 @@ TestOnlineSystem uses Angular 7, Nodejs development platform, Express framework 
 
 ```bash
 npm install
-node app.js
+node app.js  # listen localhost:3000
 ```
 
 ## Features
